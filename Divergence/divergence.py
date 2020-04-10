@@ -44,11 +44,10 @@ LEVELS = []
 
 class Cell:
 
-    def __init__(self, type: int, isGoal: bool, hasBox: bool, onGoal: bool):
+    def __init__(self, type: int, isGoal: bool, hasBox: bool):
         self.type = type
         self.isGoal = isGoal
         self.hasBox = hasBox
-        self.onGoal = onGoal
 
 
 class Level:
@@ -172,25 +171,25 @@ def loadLevel(definition: str) -> Level:
     for i in definition:
         
         if i == ".":  # Goal.
-            level.map[height].append(Cell(FLOOR, True, False, False))
+            level.map[height].append(Cell(FLOOR, True, False))
             level.goals += 1
         
         elif i == "$":  # Box.
-            level.map[height].append(Cell(FLOOR, False, True, False))
+            level.map[height].append(Cell(FLOOR, False, True))
         
         elif i == "*":  # Box over goal.
-            level.map[height].append(Cell(FLOOR, True, True, True))
+            level.map[height].append(Cell(FLOOR, True, True))
 
         elif i == "#":  # Wall.
-            level.map[height].append(Cell(WALL, False, False, False))
+            level.map[height].append(Cell(WALL, False, False))
 
         elif i == "@":  # Player.
             level.player = {'x': x, 'y': height}
-            level.map[height].append(Cell(FLOOR, False, False, False))
+            level.map[height].append(Cell(FLOOR, False, False))
         
         elif i == "&":  # Player over goal.
             level.player = {'x': x, 'y': height}
-            level.map[height].append(Cell(FLOOR, True, False, False))
+            level.map[height].append(Cell(FLOOR, True, False))
             level.goals += 1
 
         elif i == "|":  # Start a new row.
@@ -202,7 +201,7 @@ def loadLevel(definition: str) -> Level:
             level.map.append([])
 
         else:  # Empty floor.
-            level.map[height].append(Cell(FLOOR, False, False, False))
+            level.map[height].append(Cell(FLOOR, False, False))
 
         x += 1
 
@@ -260,12 +259,10 @@ def moveBox(direction: int, src: dict, level: Level) -> bool:
         
         # Increment remaining goals if the box was pushed off a goal.
         if level.get(src).isGoal:
-            level.get(src).onGoal = False
             level.goals += 1
         
         # Decrement remaining goals if the box was pushed onto a goal.
         if level.get(dest).isGoal:
-            level.get(dest).onGoal = True
             level.goals -= 1
 
         return True
@@ -291,7 +288,7 @@ def draw(level: Level):
                     # Determine what colour the box should be.
                     # If the box is on a goal, draw it in green
                     # to differentiate it from other boxes.
-                    colour = GREEN if cell.onGoal else RED
+                    colour = GREEN if cell.isGoal and cell.hasBox else RED
 
                     # Draw the boxes.
                     pygame.draw.rect(SURFACE, colour, (x * CELL + XP, y * CELL + YP, CELL - 1, CELL - 1))
