@@ -87,7 +87,7 @@ def main():
     clock = pygame.time.Clock()
     
     curLevel = 0
-
+    
     # Load first level.
     level = loadLevel(LEVELS[curLevel])
 
@@ -286,7 +286,7 @@ def draw(level: Level):
                     # Determine what colour the box should be.
                     # If the box is on a goal, draw it in green
                     # to differentiate it from other boxes.
-                    colour = GREEN if cell.isGoal and cell.hasBox else RED
+                    colour = GREEN if cell.isGoal else RED
 
                     # Draw the boxes.
                     pygame.draw.rect(SURFACE, colour, (x * CELL + XP, y * CELL + YP, CELL - 1, CELL - 1))
