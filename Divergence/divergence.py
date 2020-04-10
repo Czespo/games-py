@@ -88,8 +88,6 @@ def main():
     
     curLevel = 0
 
-    complete = False
-
     # Load first level.
     level = loadLevel(LEVELS[curLevel])
 
